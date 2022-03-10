@@ -258,6 +258,7 @@ function onQuizStart() {
     switchScreen($questionScreen);
     eutil.showElement($main);
 
+    quiz.isSubmitted = false;
     quiz.randomizeQuestions();          // randomize all of the questions
     quiz.setDuration(60);               // set quiz duration to 100 seconds
     quiz.startTimer(updateQuizTimer);   // start quiz timer countdown from duration
@@ -276,6 +277,7 @@ function onQuizFinish(finishState) {
 
     // toggle screens
     switchScreen($finishScreen);
+    eutil.showElement($main);
 
     // display user score
     const $scoreDisplay = $finishScreen.querySelector(".finish-screen > p");
@@ -289,8 +291,9 @@ function onClearHighscores() {
 
 // on "go back" from highscores screen
 function onGoBack() {
-    if (quiz.currentQuestionIndex === 0) {
+    if (quiz.currentQuestionIndex <= 1 && quiz.isSubmitted) {
         switchScreen($introScreen); // go back to the start
+        eutil.hideElement($main, true);
     } else {
         switchScreen($prevWindow); // return to previous window
     }
@@ -341,6 +344,8 @@ function onSubmitScore() {
     const initials = $initialsTextField.value.trim();
 
     if (!initials) return; // if no name is given then exit function
+    quiz.isSubmitted = true;
+    console.log("quiz submitted:", quiz.isSubmitted);
     viewHighScores({author: initials, score: quiz.lastScore, status: quiz.finishState});
 }
 

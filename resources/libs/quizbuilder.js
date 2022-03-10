@@ -58,6 +58,7 @@ export class QuizBuilder {
         this.correctAnswers = 0;
         this.lastScore = 0;
         this.finishState = "incomplete";
+        this.isSubmitted = false;
         // this.timerRoutine = thread
 
         // events
@@ -147,6 +148,7 @@ export class QuizBuilder {
 
     reset() {
         // fire onQuizFinish event 
+        this.currentQuestionIndex = 0;
         this.onQuizFinish.fire(this.finishState);
         this.lastScore = this.getScore();
 
@@ -156,7 +158,6 @@ export class QuizBuilder {
         }
 
         this.correctAnswers = 0;
-        this.currentQuestionIndex = 0;
     }
 }
 
