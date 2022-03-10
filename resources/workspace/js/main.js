@@ -294,9 +294,13 @@ function onGoBack() {
     if (quiz.currentQuestionIndex <= 1 && quiz.isSubmitted) {
         switchScreen($introScreen); // go back to the start
         eutil.hideElement($main, true);
-    } else {
+    } else if (!quiz.isSubmitted) {
         switchScreen($prevWindow); // return to previous window
+        eutil.showElement($main);
+    } else {
+        switchScreen($prevWindow);
     }
+
 }
 
 // update highscores section with latest localStorage data

@@ -10,7 +10,7 @@ This web application tests your JavaScript skills by prompting you with a nifty 
 
 To get started, click on the image below:
 
-![code quiz portal image](./resources/assets/imgs/start-quiz.png)
+<a href="https://william-horn.github.io/javascript-code-quiz/"><img src="./resources/assets/imgs/start-quiz.png"></a>
 
 After you start the quiz, you should be prompted with a question window that looks like this:
 
