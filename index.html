@@ -1,0 +1,138 @@
+<!-- 
+? @document-start
+==========================
+| MAIN QUIZ LANDING PAGE |
+==================================================================================================================================
+
+? @author:                 William J. Horn
+? @document-name:          index.html
+? @document-created:       03/04/2022
+? @document-modified:      03/07/2022
+? @document-version:       v1.0.0
+
+==================================================================================================================================
+
+? @document-info
+==================
+| ABOUT DOCUMENT |
+==================================================================================================================================
+
+Coming soon
+
+==================================================================================================================================
+
+? @document-changelog
+======================
+| DOCUMENT CHANGELOG |
+==================================================================================================================================
+
+* If this program supports changelog records then there should be a 'changelog' folder within the same directory as this program
+file. Learn more about the changelog system here: 
+https://github.com/william-horn/my-coding-conventions/blob/main/document-conventions/about-changelog.txt
+
+==================================================================================================================================
+
+? @document-todo
+=================
+| DOCUMENT TODO |
+==================================================================================================================================
+
+-   Work on initial page structure
+-   Pick out a color scheme for the webpage
+
+==================================================================================================================================
+ -->
+
+
+
+ <!DOCTYPE html>
+
+ <html>
+     <head>
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <link rel="stylesheet" href="./resources/workspace/css/global-default.css">
+         <link rel="stylesheet" href="./resources/workspace/css/main-theme.css">
+         <title>Quiz</title>
+     </head>
+
+     <body>
+
+        <!-- primary content wrapper -->
+         <div class="abs-max-height">
+
+            <!-- timer/highscores info div -->
+            <div class="top-bar">
+                <div id="top-bar-info">
+                    <button class="red-nav-button">View Highscores</button>
+                    <p>Timer: 00:00</p>
+                </div>
+            </div>
+
+            <!-- secondary content wrapper for centering -->
+            <div class="horizontal-center vertical-center rel-max-height">
+
+                <!-- ------------------------- -->
+                <!-- !! PHASE 1: QUIZ INTRO !! -->
+                <!-- ------------------------- -->
+
+                <!-- main intro heading of page -->
+                <header id="intro-screen" class="large-padding">
+                    <h1>Quiz</h1>
+                    <div>
+                        <p>To start the quiz, just start the quiz. If you're having trouble starting the quiz, try getting started with the quiz.</p>
+                        <button class="start-quiz-button red-nav-button" id="start-quiz-button">Start Quiz</button>
+                    </div>
+                </header>
+
+                <!-- main quiz content -->
+                <main>
+                    <!-- ------------------------------ -->
+                    <!-- !! PHASE 2: QUESTION SCREEN !! -->
+                    <!-- ------------------------------ -->
+                    <section aria-labelledby="question-title" id="question-screen" class="question-screen medium-padding">
+                        <h2 id="question-title" class="question-title"></h2>
+                        <ul>
+                            <!-- !! generate answer buttons here !! -->
+                        </ul>
+                        <footer id="question-feedback" class="question-feedback">
+                            <p>you got the answer wrong</p>
+                        </footer>
+                    </section>
+
+                    <!-- ----------------------------------- -->
+                    <!-- !! PHASE 3: QUIZ FINISHED SCREEN !! -->
+                    <!-- ----------------------------------- -->
+                    <section aria-labelledby="quiz-complete-title" id="finish-screen" class="finish-screen">
+                        <h2 id="quiz-complete-title">Quiz Complete!</h2>
+                        <p>Your final score: 0</p>
+                        <div id="score-entry" class="score-entry">
+                            <label for="">Enter initials:</label>
+                            <input type="text" placeholder="Initials Here">
+                            <button class="red-nav-button">submit</button>
+                        </div>
+                    </section>
+
+                    <!-- -------------------------------- -->
+                    <!-- !! PHASE 4: HIGHSCORES SCREEN !! -->
+                    <!-- -------------------------------- -->
+                    <section aria-labelledby="highscores-title" id="highscores-screen" class="highscores-screen">
+                        <h2 id="highscores-title">Highscores:</h2>
+                        <ol>
+                            <!-- !! generate highscore labels here !! -->
+                        </ol>
+                        <button id="go-back-btn">Go back</button>
+                        <button id="clear-scores-btn" class="red-nav-button">Clear scores</button>
+                    </section>
+                </main>
+
+            <!-- close secondary content wrapper -->
+            </div>
+
+        <!-- close primary content wrapper -->
+         </div>
+
+         <!-- inject main script -->
+         <script type="module" src="./resources/workspace/js/main.js"></script>
+     </body>
+ </html>
+
