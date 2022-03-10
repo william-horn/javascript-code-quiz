@@ -226,3 +226,148 @@ function generateNextQuestion() {
         setTimeout(generateNextQuestion, 2000);
     });
 }
+
+
+/* --------------- */
+/* Event Callbacks */
+/* --------------- */
+
+// handle when the user selects an answer button choice
+function onAnswerSelected(event) {
+    event.stopPropagation(); // don't let answerButtonContainer click event propagate
+
+    const currentQuestion = quiz.getCurrentQuestion();  // current question object
+    const $answerSelected = event.target;               // click target
+    const answerChoice = currentQuestion.buttons.get($answerSelected); 
+
+    // if target element is not an answer button
+    if (!answerChoice) {
+        gutil.debugPrint("some other element was clicked");
+        return;
+    }
+
+    // answer the question
+    currentQuestion.answer(answerChoice);
+}
+
+// initiate quiz
+function onQuizStart() {
+    gutil.debugPrint("The quiz has started!");
+
+    // hide intro screen and show main screen
+    switchScreen($questionScreen);
+    eutil.showElement($main);
+
+    quiz.randomizeQuestions();          // randomize all of the questions
+    quiz.setDuration(60);               // set quiz duration to 100 seconds
+    quiz.startTimer(updateQuizTimer);   // start quiz timer countdown from duration
+
+    $answerButtonContainer.addEventListener("click", onAnswerSelected); // connect click event to the answers container
+
+    // generate the first question
+    generateNextQuestion();
+}
+
+// when quiz object has terminated
+function onQuizFinish(finishState) {
+    gutil.debugPrint("The quiz has been finished! Finish state: " + finishState);
+    gutil.debugPrint("User finished quiz with score of: " + quiz.getScore());
+    $answerButtonContainer.removeEventListener("click", onAnswerSelected); // remove previous click listener for answer container
+
+    // toggle screens
+    switchScreen($finishScreen);
+
+    // display user score
+    const $scoreDisplay = $finishScreen.querySelector(".finish-screen > p");
+    $scoreDisplay.textContent = "Final Score: " + quiz.getScore();
+}
+
+function onClearHighscores() {
+    let hsData = localStorage.clear() // !! warning: this will clear all data. switch to removeItem() if other data storage will be used
+    viewHighScores();
+}
+
+// on "go back" from highscores screen
+function onGoBack() {
+    if (quiz.currentQuestionIndex === 0) {
+        switchScreen($introScreen); // go back to the start
+    } else {
+        switchScreen($prevWindow); // return to previous window
+    }
+}
+
+// update highscores section with latest localStorage data
+function viewHighScores(hsData) {
+
+    // get decoded old data, or new data
+    let newData = JSON.parse(localStorage.getItem("highscores") || "[]");
+
+    if (hsData) {
+        newData.push(hsData);
+        localStorage.setItem("highscores", JSON.stringify(newData));
+    }
+
+    // toggle element view
+    switchScreen($highscoresScreen);
+    eutil.showElement($main);
+
+    const $highscoresContainer = $highscoresScreen.querySelector("ol");
+    eutil.clearChildrenOnElement($highscoresContainer);
+
+    // generate scores
+    for (let i = 0; i < newData.length; i++) {
+        let data = newData[i];
+        let $li = document.createElement("li");
+        $li.textContent = data.author + " - " + data.score + " | " + data.status;
+        $highscoresContainer.appendChild($li);
+    }
+
+    // "go back" and "clear score" buttons
+    const $goBackButton = $highscoresScreen.querySelector("#go-back-btn");
+    const $clearScoresButton = $highscoresScreen.querySelector("#clear-scores-btn");
+
+    // clear old event connections
+    $goBackButton.removeEventListener("click", onGoBack);
+    $clearScoresButton.removeEventListener("click", onClearHighscores);
+
+    // set current event connections
+    $goBackButton.addEventListener("click", onGoBack);
+    $clearScoresButton.addEventListener("click", onClearHighscores);
+
+}
+
+// when a user submits their score to the leaderboard
+function onSubmitScore() {
+    const initials = $initialsTextField.value.trim();
+
+    if (!initials) return; // if no name is given then exit function
+    viewHighScores({author: initials, score: quiz.lastScore, status: quiz.finishState});
+}
+
+function initializeElements() {
+    // store defaults
+    eutil.addToPropertyCache($infoBar, {"style": {"display": true}});
+    eutil.addToPropertyCache($questionScreen, {"style": {"display": true}});
+    eutil.addToPropertyCache($introScreen, {"style": {"display": true}});
+    eutil.addToPropertyCache($questionFeedback, {"style": {"display": true}});
+
+    eutil.hideElement($main, true);
+}
+
+/* ----------------------- */
+/* Connect Event Listeners */
+/* ----------------------- */
+
+// when the page is interactive, fire onDocumentInteractive
+document.addEventListener("readystatechange", () => {
+    if (document.readyState === "complete") {
+        gutil.debugPrint("ready state:", document.readyState);
+        initializeElements();
+    }
+}); 
+
+// connect remaining event listeners
+quiz.onQuizFinish.connect("onQuizFinish", onQuizFinish);
+$startQuizButton.addEventListener("click", onQuizStart);
+$submitScoreButton.addEventListener("click", onSubmitScore);
+$viewHighscoresButton.addEventListener("click", () => viewHighScores());
